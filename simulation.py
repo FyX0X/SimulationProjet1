@@ -61,8 +61,18 @@ e_pot = np.empty_like(t)
 e_kin = np.empty_like(t)
 e_tot = np.empty_like(t)
 
+
+def get_custom_friction(angular_vel, custom_friction_coef, custom_power):
+
+    if angular_vel == 0:
+        return 0
+    dir = angular_vel/abs(angular_vel)
+    angular_speed = abs(angular_vel)
+    friction = - b / (m * l ** 2) * math.pow(angular_speed, custom_power) * custom_friction_coef * dir
+    return friction
+
     
-def simulation(motion_type: str):
+def simulation(motion_type: str, custom_friction=None, friction_power=1):
     """
     pre: motion_type: string, which formula to use with the simulation for the cart movement ("const", "sinus", "triangle", "square")
     post: exécute une simulation jusqu'à t=end par pas de dt=step.
@@ -92,7 +102,11 @@ def simulation(motion_type: str):
         
         # calcule de l'acceleration avec les conditions actuelles
 
-        theta_dot_dot[i] = -g/l*math.sin(theta[i]) - a_c[i]/l*math.cos(theta[i]) - b/(m*l**2)*theta_dot[i]
+        if custom_friction is not None:
+            theta_dot_dot[i] = -g/l*math.sin(theta[i]) - a_c[i]/l*math.cos(theta[i])
+            theta_dot_dot[i] += get_custom_friction(theta_dot[i], custom_friction, friction_power)
+        else:
+            theta_dot_dot[i] = -g/l*math.sin(theta[i]) - a_c[i]/l*math.cos(theta[i]) - b/(m*l**2)*(theta_dot[i])
 
         # calcul accélération, vitesse, position
         theta_dot[i+1] = theta_dot[i] + theta_dot_dot[i] * dt
@@ -148,15 +162,17 @@ def graph_phase():
     plt.ylabel("angular velocity [rad/s]")
     plt.show()
 
+
 ### module
-def simulate(motion):
-    simulation(motion)
+def simulate(motion, custom_friction=None, power=1):
+    simulation(motion, custom_friction, power)
     calculate_energy()
-    
+
+
 ### programme principal
 if __name__ == '__main__':
     
-    simulation("const")
+    simulation("const", 0.85, 1.3)
     graphiques()
     calculate_energy()
     graph_energy()

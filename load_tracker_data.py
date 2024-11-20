@@ -1,6 +1,7 @@
 import numpy as np
 import math
 
+
 def load_data(filename):
     time = []
     theta = []
@@ -25,7 +26,8 @@ def load_data(filename):
     print(f"min x: {min_x}")
     print(theta[0])
             
-    return time, theta
+    return np.array(time), np.array(theta)
+
 
 def get_theta(x,y):
     return math.atan(-x/y)
