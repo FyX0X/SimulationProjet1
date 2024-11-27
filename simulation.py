@@ -1,180 +1,322 @@
 import math
-import matplotlib.pyplot as plt
 import numpy as np
 
-### Constantes
 
-g = 9.81         # gravitation [m/s**2]
-
-### Paramètres du système
-
-l = 0.255         # longueur du pendule [m]
-m = 0.01          # masse du prehenseur [kg]
-b = 0.00015         # coefficient de frottement [kg*m^2/s]
-
-
-### Paramètres de la simulation
-
-step = 0.001                       # pas (dt) [s]
-end = 30                           # durée [s]
-theta_0 = 0.5555125041788009       # position angulaire initiale [rad]				(from experimental data)
-theta_dot_0 = 0                    # vitesse_angulaire initiale [rad/s]
-x_c_0 = 0                          # position du cart initiale [m]
-v_c_0 = 0.0                        # vitesse du cart initiale initiale [m/s]
-
-
-
-### mouvement chariot
-
-USE_POS = True			# True: cart movement from position, False, from acceleration
-
-### Fonction de déplacement du Cart
-
-def get_cart_motion(time, mode, pulsation=1, amplitude=1):
-    match mode:
-        case "const":
-            return 0
-        case "sinus":
-            return amplitude * math.sin(pulsation * time)
-        case "square":
-            if USE_POS:
-                raise Exception("Square Function is not continuous, therefore not allowed to use for Position")
-            s = math.sin(pulsation*time)
-            if s != 0:
-                return amplitude * abs(s)/s
-            return 0
-        case "triangle":
-            y = pulsation*time/math.pi
-            return amplitude * (abs(y-int(y)-0.5) * 4 - 1)
-
-
-t = np.arange(0, end, step)
-theta = np.empty_like(t)          
-theta_dot = np.empty_like(t)
-theta_dot_dot = np.empty_like(t)
-
-x_c = np.empty_like(t)
-v_c = np.empty_like(t)
-a_c = np.empty_like(t)
-
-e_pot = np.empty_like(t)
-e_kin = np.empty_like(t)
-e_tot = np.empty_like(t)
-
-
-def get_custom_friction(angular_vel, custom_friction_coef, custom_power):
-
-    if angular_vel == 0:
-        return 0
-    dir = angular_vel/abs(angular_vel)
-    angular_speed = abs(angular_vel)
-    friction = - b / (m * l ** 2) * math.pow(angular_speed, custom_power) * custom_friction_coef * dir
-    return friction
-
-    
-def simulation(motion_type: str, custom_friction=None, friction_power=1):
+class Pendulum:
     """
-    pre: motion_type: string, which formula to use with the simulation for the cart movement ("const", "sinus", "triangle", "square")
-    post: exécute une simulation jusqu'à t=end par pas de dt=step.
-          Remplit les listes theta, theta_dot, theta_dot_dot
-          avec les positions, vitesses et accélérations angulaire du pendule.
+    Representation of a pendulum on a cart's state with respect to time.
+
+    Can be used to store a simulated pendulum or simply experimental data.
+
+    Class Attributes:
+        g (float): Gravitational acceleration of the pendulum's environment [m/s^2]
+        l (float): Length of the pendulum [m].
+        m (float): Mass of the pendulum [kg].
+
+    Instance Attributes:
+        name (str): A name to identify the pendulum (for graphing purpose)
+        time_shift (float): How much should the graph be horizontally shifted (for graphing purpose)
+
+        time (np.ndarray): A 1D array of time points [s] where the pendulum's state is evaluated.
+
+        theta (np.ndarray): Angular position of the pendulum at each time step [rad].
+        omega (np.ndarray): Angular velocity of the pendulum at each time step [rad/s].
+        alpha (np.ndarray): Angular acceleration of the pendulum at each time step [rad/s^2].
+
+        x_c (np.ndarray): Position of the cart of the pendulum at each time step [rad].
+        v_c (np.ndarray): Velocity of the cart of the pendulum at each time step [rad/s].
+        a_c (np.ndarray): Acceleration of the cart of the pendulum at each time step [rad/s^2].
+
     """
-    # conditions initiales
-    theta[0] = theta_0
-    theta_dot[0] = theta_dot_0
-    
-    x_c[0] = x_c_0
-    v_c[0] = v_c_0
-    
-    for i in range(len(t)-1):
 
-        dt = step
-        
-        # calcule de la position du cart
-        if USE_POS:
-            x_c[i+1] = get_cart_motion(t[i], motion_type)
-            v_c[i+1] = (x_c[i+1]-x_c[i])/dt
-            a_c[i+1] = (v_c[i+1]-v_c[i])/dt
-        else:
-            a_c[i] = get_cart_motion(t[i], motion_type)
-            v_c[i+1] = v_c[i] + a_c[i] * dt
-            x_c[i+1] = x_c[i] + v_c[i] * dt
-        
-        # calcule de l'acceleration avec les conditions actuelles
+    g = 9.81
+    l = 0.2555
+    m = 0.01
 
-        if custom_friction is not None:
-            theta_dot_dot[i] = -g/l*math.sin(theta[i]) - a_c[i]/l*math.cos(theta[i])
-            theta_dot_dot[i] += get_custom_friction(theta_dot[i], custom_friction, friction_power)
-        else:
-            theta_dot_dot[i] = -g/l*math.sin(theta[i]) - a_c[i]/l*math.cos(theta[i]) - b/(m*l**2)*(theta_dot[i])
+    def __init__(self, name: str, time: np.ndarray):
+        """
+        Initialize the Pendulum object with a given time array.
 
-        # calcul accélération, vitesse, position
-        theta_dot[i+1] = theta_dot[i] + theta_dot_dot[i] * dt
-        theta[i+1] = theta[i] + theta_dot[i] * dt
+        Args:
+            name (str): A name to indentify the pendulum
+            time (np.ndarray): A 1D array of time points [s] where the pendulum's state is evaluated.
 
 
+        Initializes the `theta`, `omega`, `alpha`, `x_c`, `v_c`, and `a_c` arrays based on the provided
+        `time` array. These arrays represent the angular position (`theta`), angular velocity (`omega`),
+        and angular acceleration (`alpha`) of the pendulum, as well as the position (`x_c`), velocity (`v_c`),
+        and acceleration (`a_c`) of the cart at each time step, respectively.
+        """
 
-def graphiques():
-    
-    plt.figure(1)
-    plt.subplot(3,1,1)
-    plt.plot(t,theta, label="angular position")
-    plt.legend()
-    plt.subplot(3,1,2)
-    plt.plot(t,theta_dot, label="angular speed")
-    plt.legend()
-    plt.subplot(3,1,3)
-    plt.plot(t,theta_dot_dot, label="angular acceleration")
-    plt.legend()
-    plt.show()
+        self.name = name
+        self.time_shift = 0
 
-def get_kinetic_energy(i):
-    """ Calculates kinetic energy
-    pre: i: int, current iteration
-    post: float, kinetic energy
+        self.time = time
+
+        self.theta = np.zeros_like(time)
+        self.omega = np.zeros_like(time)
+        self.alpha = np.zeros_like(time)
+
+        self.x_c = np.zeros_like(time)
+        self.v_c = np.zeros_like(time)
+        self.a_c = np.zeros_like(time)
+
+    def derive_angular_state(self):
+        """
+        Derive the cart's angular velocity and acceleration from the angular position.
+
+        The angular velocity is calculated as the time derivative of the angular position, and the angular acceleration
+        is calculated as the time derivative of the angular velocity.
+
+        This function assumes that `theta` contains the position of the cart at each time point.
+        The resulting angular velocity (`omega`) and acceleration (`alpha`) are stored in the respective arrays.
+
+        Boundary conditions:
+            - The angular velocity at the first time step is set equal to the second time step.
+            - The angular acceleration at the first time step is set to zero.
+        """
+
+        dt = self.time[-1]/len(self.time)
+        # Calculate angular velocity
+        for i in range(len(self.time)-1):
+            self.omega[i+1] = (self.theta[i+1] - self.theta[i]) / dt
+        # Set boundary condition
+        self.omega[0] = self.omega[1]
+
+        # calculate acceleration
+        for i in range(len(self.time)-1):
+            self.alpha[i+1] = (self.omega[i+1] - self.omega[i]) / dt
+        # Set boundary condition
+        self.alpha[0] = 0
+
+    def derive_cart_state_from_position(self):
+        """
+        Derive the cart's velocity and acceleration from the given position.
+
+        The velocity is calculated as the time derivative of the position, and the acceleration
+        is calculated as the time derivative of the velocity.
+
+        This function assumes that `x_c` contains the position of the cart at each time point.
+        The resulting velocity (`v_c`) and acceleration (`a_c`) are stored in the respective arrays.
+
+        Boundary conditions:
+            - The velocity at the first time step is set equal to the second time step.
+            - The acceleration at the first time step is set to zero.
+        """
+
+        dt = self.time[-1]/len(self.time)
+        # Calculate velocity
+        for i in range(len(self.time)-1):
+            self.v_c[i+1] = (self.x_c[i+1] - self.x_c[i]) / dt
+        # Set boundary condition
+        self.v_c[0] = self.v_c[1]
+
+        # calculate acceleration
+        for i in range(len(self.time)-1):
+            self.a_c[i+1] = (self.v_c[i+1] - self.v_c[i]) / dt
+        # Set boundary condition
+        self.a_c[0] = 0
+
+    def integrate_cart_state_from_acceleration(self):
+        """
+        Integrate the cart's acceleration to obtain its position and velocity.
+
+        Given the cart's acceleration (`a_c`), this function integrates the acceleration to
+        obtain the velocity and then integrates the velocity to obtain the position over time.
+
+        Boundary conditions:
+            - The initial position (`x_c[0]`) and velocity (`v_c[0]`) are set to zero.
+        """
+
+        dt = self.time[-1]/len(self.time)
+
+        # Set initial conditions for position and velocity
+        self.x_c[0] = 0
+        self.v_c[0] = 0
+
+        # Integrate acceleration to get velocity and position
+        for i in range(len(self.time)-1):
+            self.v_c[i+1] = self.v_c[i] + self.a_c[i] * dt
+            self.x_c[i+1] = self.x_c[i] + self.v_c[i] * dt
+
+    def get_kinetic_energy(self) -> np.ndarray:
+        """
+        Calculate the kinetic energy of the pendulum and cart system.
+
+        Steps:
+            1. The cart's velocity is represented as a 2D vector (v_x, 0), where `v_x` is the cart's
+               velocity in the x-direction, and there's no velocity in the y-direction.
+            2. The pendulum's relative velocity is computed from its angular velocity (`omega`) and
+               position (`theta`), converting it to Cartesian coordinates.
+            3. The total velocity of the pendulum is the sum of the cart's velocity and the pendulum's
+               relative velocity.
+            4. The kinetic energy is calculated using the formula:
+               KE = 0.5 * m * v^2, where v^2 is the squared magnitude of the velocity.
+
+        Returns:
+            np.ndarray: An array containing the kinetic energy at each time step.
+        """
+
+        # Create the 2D velocity for the cart (cart is only moving in x-direction)
+        cart_velocity = np.column_stack((self.v_c, np.zeros_like(self.v_c)))  # (v_x, 0) for cart velocity
+
+        # Relative speed of pendulum at the end (angular velocity * length)
+        pendulum_relative_speed = self.omega * self.l
+
+        # Calculate the pendulum's velocity components in x and y (relative to the cart)
+        speed_x = pendulum_relative_speed * np.sin(self.theta)
+        speed_y = pendulum_relative_speed * np.cos(self.theta)
+        pendulum_relative_velocity = np.column_stack((speed_x, speed_y))
+
+        # Total velocity (cart + pendulum) in 2D
+        pendulum_absolute_velocity = cart_velocity + pendulum_relative_velocity
+
+        # Calculate the speed squared for each time step (magnitude squared of velocity vector)
+        speed_squared = np.sum(np.square(pendulum_absolute_velocity), axis=1)
+
+        # Kinetic energy: KE = 1/2 * m * v^2 (where v^2 is the squared speed)
+        return 0.5 * self.m * speed_squared
+
+    def get_potential_energy(self) -> np.ndarray:
+        """
+        Calculate the gravitational potential energy of the pendulum at each time step.
+
+        The potential energy is calculated using the formula:
+            PE = m * g * l * (1 - cos(theta))
+
+        Where:
+            m (float): mass of the pendulum [kg]
+            g (float): acceleration due to gravity [m/s^2]
+            l (float): length of the pendulum [m]
+            theta (np.ndarray): angular position of the pendulum at each time step [rad]
+
+        Returns:
+            np.ndarray: Array containing the potential energy at each time step.
+        """
+
+        return self.m * self.g * self.l * (1 - np.cos(self.theta))
+
+    def get_total_energy(self) -> np.ndarray:
+        """
+        Calculate the total mechanical energy (kinetic + potential) of the pendulum at each time step.
+
+        The total energy is the sum of the potential energy and kinetic energy, calculated as:
+            Total Energy = Kinetic Energy + Potential Energy
+
+        Where:
+            Kinetic Energy = 0.5 * m * v^2
+            Potential Energy = m * g * l * (1 - cos(theta))
+
+        Returns:
+            np.ndarray: Array containing the total energy of the pendulum at each time step.
+        """
+
+        return self.get_potential_energy() + self.get_kinetic_energy()
+
+
+class SimulatedPendulum(Pendulum):
     """
-    vel_c = np.array([v_c[i], 0])       # vitesse du chariot vecteur en 2 dimensions (x,y) -> (v_c, 0)
-    speed = l * theta_dot[i]            # vitesse du pendule relative au chariot (scalaire)
-    vel_rel_p = np.array([speed * math.sin(theta[i]), speed * math.cos(theta[i])])  # vitesse vectorielle
-    vel_abs = vel_c + vel_rel_p         # vitesse absolue du pendule
-    speed_abs = math.sqrt(vel_abs[0]**2 + vel_abs[1]**2)
-    
-    return 0.5 * m * speed_abs**2
-    
-def calculate_energy():
-    for i in range(len(t)):
-        e_pot[i] = m * g * l * (1-math.cos(theta[i]))   # mgh
-        e_kin[i] = get_kinetic_energy(i) # speed of cart + speedc
-        e_tot[i] = e_pot[i] + e_kin[i] 
+    A simulated pendulum attached to a cart.
 
-def graph_energy():
-    plt.figure(2)
-    plt.plot(t, e_pot , label="potential")
-    plt.plot(t, e_kin, label="kinetic")
-    plt.plot(t, e_tot, label="total")
-    plt.legend()
-    plt.show()
+    This class extends the basic Pendulum model by adding the a simulation to calculate the state of the pendulum.
+    The simulation includes the friction as an additional physical parameter
 
-def graph_phase():
-    plt.figure(3)
-    plt.plot(theta, theta_dot)
-    plt.xlabel("angular position [rad]")
-    plt.ylabel("angular velocity [rad/s]")
-    plt.show()
+    Class Attributes:
+        dt (float): Time step of the simulation [s].
+        end (float): Length of the simulation [s].
 
+    Instance Attributes:
+        b (float): Friction coefficient of the pendulum [kg*m^2/s].
+    """
 
-### module
-def simulate(motion, custom_friction=None, power=1):
-    simulation(motion, custom_friction, power)
-    calculate_energy()
+    dt = 0.001
+    end = 30
 
+    def __init__(self, name: str, theta_0: float = 0, omega_0: float = 0, friction_coefficient: float = 0.00015):
+        """
+        Initialize the simulated pendulum.
 
-### programme principal
-if __name__ == '__main__':
-    
-    simulation("const", 0.85, 1.3)
-    graphiques()
-    calculate_energy()
-    graph_energy()
-    graph_phase()
+        Args:
+            name (str): A name to indentify the pendulum.
+            theta_0 (float): Initial angular position of the pendulum [rad].
+            omega_0 (float): Initial angular velocity of the pendulum [rad/s].
+            friction_coefficient (float): Friction coefficient of the pendulum [kg*m^2/s].
+        """
 
+        super().__init__(name, np.arange(0, SimulatedPendulum.end, SimulatedPendulum.dt))
+        self.b = friction_coefficient
+
+        self.theta[0] = theta_0
+        self.omega[0] = omega_0
+
+    def simulate(self):
+        """
+        Runs the simulation of the pendulum using Euler's Integration method.
+
+        This method calculates and stores the angular position, velocity, and acceleration
+        of the pendulum with respect to time. The results are stored in the `theta`,
+        `omega`, and `alpha` arrays, respectively.
+
+        Updates:
+            alpha: Angular acceleration of the pendulum at each time step.
+            omega: Angular velocity of the pendulum at each time step.
+            theta: Angular position of the pendulum at each time step.
+        """
+
+        for i in range(len(self.time)-1):
+            self.alpha[i] = - self.g / self.l * math.sin(self.theta[i]) \
+                            - self.a_c[i] / self.l * math.cos(self.theta[i]) \
+                            - self.b / (self.m * self.l ** 2) * (self.omega[i])
+
+            self.omega[i + 1] = self.omega[i] + self.alpha[i] * self.dt
+            self.theta[i + 1] = self.theta[i] + self.omega[i] * self.dt
+
+    def set_cart_profile_from_position(self, movement_profile: str, pulsation: float = 1, amplitude: float = 1):
+        """
+        Set the cart's position profile based on the specified movement type.
+
+        Args:
+            movement_profile (str): Type of movement profile for the cart. Options are "const", "sinus", "triangle".
+            pulsation (float): The pulsation (frequency) of the movement profile in radians per second.
+            amplitude (float): The amplitude of the movement profile.
+
+        Sets the cart's position (`x_c`), velocity (`v_c`), and acceleration (`a_c`) based on the chosen profile.
+        """
+
+        # Set position profile based on the movement type
+        match movement_profile:
+            case "const":
+                self.x_c = np.zeros_like(self.time)
+            case "sinus":
+                self.x_c = amplitude * np.sin(self.time * pulsation)
+            case default:
+                raise ValueError(f"Invalid movement profile: {movement_profile}")
+
+        self.derive_cart_state_from_position()
+
+    def set_cart_profile_from_acceleration(self, movement_profile: str, pulsation: float = 1, amplitude: float = 1):
+        """
+        Set the cart's acceleration profile based on the specified movement type.
+
+        Args:
+            movement_profile (str): Type of acceleration profile for the cart. Options are "const", "sinus", "triangle", "square".
+            pulsation (float): The pulsation (frequency) of the movement profile in radians per second.
+            amplitude (float): The amplitude of the movement profile.
+
+        Sets the cart's position (`x_c`), velocity (`v_c`), and acceleration (`a_c`) based on the chosen profile.
+        """
+
+        # Set acceleration profile based on the movement type
+        match movement_profile:
+            case "const":
+                self.a_c = np.zeros_like(self.time)
+            case "sinus":
+                self.a_c = amplitude * np.sin(self.time * pulsation)
+            case "triangle":
+                self.a_c = amplitude * (2 * np.abs(np.mod(self.time * pulsation * np.pi, 1) - 0.5) - 1)
+            case "square":
+                self.a_c = amplitude * np.sign(np.sin(self.time * pulsation))
+            case default:
+                raise ValueError(f"Invalid movement profile: {movement_profile}")
+
+        self.integrate_cart_state_from_acceleration()
