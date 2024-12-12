@@ -3,7 +3,6 @@ from scipy.interpolate import interp1d
 from load_tracker_data_old import load_data
 import simulation_old
 import graph_old
-from matplotlib import pyplot as plt
 
 
 def truncate_sim(sim_time, sim_theta, data_time):
@@ -17,13 +16,13 @@ def truncate_sim(sim_time, sim_theta, data_time):
 
 
 # Experimental data (irregular time points)
-data_time, data_theta = load_data("data4.txt")
+data_time, data_theta = load_data("../data/data4.txt")
 
 # Interpolate experimental data to simulation time points
 interp_data_func = interp1d(data_time, data_theta, kind='linear', fill_value="extrapolate")
 
 
-powers = np.arange(1.235, 1.240, 0.0001)
+powers = np.arange(1.235, 1.240, 01.000)
 coefs = np.arange(0.845, 0.865, 0.0001)
 selected_coef = np.empty_like(powers)
 fitness = np.empty_like(powers)         # fitness is calculated as Mean Square Error

@@ -10,12 +10,13 @@ class Pendulum:
 
     Class Attributes:
         g (float): Gravitational acceleration of the pendulum's environment [m/s^2]
-        l (float): Length of the pendulum [m].
-        m (float): Mass of the pendulum [kg].
 
     Instance Attributes:
-        name (str): A name to identify the pendulum (for graphing purpose)
-        time_shift (float): How much should the graph be horizontally shifted (for graphing purpose)
+        name (str): A name to identify the pendulum (for graphing purpose).
+        time_shift (float): How much should the graph be horizontally shifted (for graphing purpose).
+
+        m (float): Mass of the pendulum [kg].
+        l (float): Length of the pendulum [m].
 
         time (np.ndarray): A 1D array of time points [s] where the pendulum's state is evaluated.
 
@@ -30,16 +31,18 @@ class Pendulum:
     """
 
     g = 9.81
-    l = 0.2555
-    m = 0.01
 
-    def __init__(self, name: str, time: np.ndarray):
+    def __init__(self, name: str, mass: float, length: float, time: np.ndarray, theta: np.ndarray = None):
         """
         Initialize the Pendulum object with a given time array.
 
         Args:
             name (str): A name to indentify the pendulum
+            mass (float): Mass of the pendulum [kg]
+            length (float): Length of the pendulum [m]
             time (np.ndarray): A 1D array of time points [s] where the pendulum's state is evaluated.
+            theta (np.ndarray, optional): A 1D array of theta points [rad] of the pendulum at each time step.
+                If provided, angular velocity (`omega`) and angular acceleration (`alpha`) will be calculated.
 
 
         Initializes the `theta`, `omega`, `alpha`, `x_c`, `v_c`, and `a_c` arrays based on the provided
@@ -51,6 +54,9 @@ class Pendulum:
         self.name = name
         self.time_shift = 0
 
+        self.m = mass
+        self.l = length
+
         self.time = time
 
         self.theta = np.zeros_like(time)
@@ -61,7 +67,12 @@ class Pendulum:
         self.v_c = np.zeros_like(time)
         self.a_c = np.zeros_like(time)
 
-    def derive_angular_state(self):
+        # calculates angular speed and acceleration if from data
+        if theta is not None:
+            self.theta = theta
+            self.derive_angular_state()
+
+    def derive_angular_state(self) -> None:
         """
         Derive the cart's angular velocity and acceleration from the angular position.
 
@@ -76,7 +87,7 @@ class Pendulum:
             - The angular acceleration at the first time step is set to zero.
         """
 
-        dt = self.time[-1]/len(self.time)
+        dt = self.time[-1]/(len(self.time) - 1)
         # Calculate angular velocity
         for i in range(len(self.time)-1):
             self.omega[i+1] = (self.theta[i+1] - self.theta[i]) / dt
@@ -89,7 +100,7 @@ class Pendulum:
         # Set boundary condition
         self.alpha[0] = 0
 
-    def derive_cart_state_from_position(self):
+    def derive_cart_state_from_position(self) -> None:
         """
         Derive the cart's velocity and acceleration from the given position.
 
@@ -104,7 +115,8 @@ class Pendulum:
             - The acceleration at the first time step is set to zero.
         """
 
-        dt = self.time[-1]/len(self.time)
+        dt = self.time[-1]/(len(self.time) - 1)
+
         # Calculate velocity
         for i in range(len(self.time)-1):
             self.v_c[i+1] = (self.x_c[i+1] - self.x_c[i]) / dt
@@ -117,7 +129,7 @@ class Pendulum:
         # Set boundary condition
         self.a_c[0] = 0
 
-    def integrate_cart_state_from_acceleration(self):
+    def integrate_cart_state_from_acceleration(self) -> None:
         """
         Integrate the cart's acceleration to obtain its position and velocity.
 
@@ -128,7 +140,7 @@ class Pendulum:
             - The initial position (`x_c[0]`) and velocity (`v_c[0]`) are set to zero.
         """
 
-        dt = self.time[-1]/len(self.time)
+        dt = self.time[-1]/(len(self.time)-1)
 
         # Set initial conditions for position and velocity
         self.x_c[0] = 0
@@ -178,38 +190,12 @@ class Pendulum:
         return 0.5 * self.m * speed_squared
 
     def get_potential_energy(self) -> np.ndarray:
-        """
-        Calculate the gravitational potential energy of the pendulum at each time step.
-
-        The potential energy is calculated using the formula:
-            PE = m * g * l * (1 - cos(theta))
-
-        Where:
-            m (float): mass of the pendulum [kg]
-            g (float): acceleration due to gravity [m/s^2]
-            l (float): length of the pendulum [m]
-            theta (np.ndarray): angular position of the pendulum at each time step [rad]
-
-        Returns:
-            np.ndarray: Array containing the potential energy at each time step.
-        """
+        """Calculate the gravitational potential energy of the pendulum at each time step."""
 
         return self.m * self.g * self.l * (1 - np.cos(self.theta))
 
     def get_total_energy(self) -> np.ndarray:
-        """
-        Calculate the total mechanical energy (kinetic + potential) of the pendulum at each time step.
-
-        The total energy is the sum of the potential energy and kinetic energy, calculated as:
-            Total Energy = Kinetic Energy + Potential Energy
-
-        Where:
-            Kinetic Energy = 0.5 * m * v^2
-            Potential Energy = m * g * l * (1 - cos(theta))
-
-        Returns:
-            np.ndarray: Array containing the total energy of the pendulum at each time step.
-        """
+        """Calculate the total mechanical energy of the pendulum."""
 
         return self.get_potential_energy() + self.get_kinetic_energy()
 
@@ -218,38 +204,42 @@ class SimulatedPendulum(Pendulum):
     """
     A simulated pendulum attached to a cart.
 
-    This class extends the basic Pendulum model by adding the a simulation to calculate the state of the pendulum.
-    The simulation includes the friction as an additional physical parameter
+    This class extends the basic Pendulum model by adding the simulation methods to calculate the state of the pendulum.
+    The simulation includes the friction as an additional physical parameter.
 
     Class Attributes:
         dt (float): Time step of the simulation [s].
-        end (float): Length of the simulation [s].
 
     Instance Attributes:
         b (float): Friction coefficient of the pendulum [kg*m^2/s].
     """
 
-    dt = 0.001
-    end = 30
+    dt = 0.0005
 
-    def __init__(self, name: str, theta_0: float = 0, omega_0: float = 0, friction_coefficient: float = 0.00015):
+    def __init__(self, name: str, mass: float, length: float, theta_0: float, omega_0: float, friction_coefficient: float, end: float = 30):
         """
-        Initialize the simulated pendulum.
+        Initialize and simulate the pendulum.
 
         Args:
             name (str): A name to indentify the pendulum.
+            mass (float): Mass of the pendulum [kg].
+            length (float): Length of the pendulum [m].
             theta_0 (float): Initial angular position of the pendulum [rad].
             omega_0 (float): Initial angular velocity of the pendulum [rad/s].
             friction_coefficient (float): Friction coefficient of the pendulum [kg*m^2/s].
+            end (float, optional): Length of the simulation [s]. Defaults to 30[s]
         """
 
-        super().__init__(name, np.arange(0, SimulatedPendulum.end, SimulatedPendulum.dt))
+        super().__init__(name, mass, length, np.arange(0, end, SimulatedPendulum.dt))
         self.b = friction_coefficient
 
         self.theta[0] = theta_0
         self.omega[0] = omega_0
 
-    def simulate(self):
+        # simulates the pendulum evolution
+        self.simulate()
+
+    def simulate(self) -> None:
         """
         Runs the simulation of the pendulum using Euler's Integration method.
 
@@ -271,7 +261,7 @@ class SimulatedPendulum(Pendulum):
             self.omega[i + 1] = self.omega[i] + self.alpha[i] * self.dt
             self.theta[i + 1] = self.theta[i] + self.omega[i] * self.dt
 
-    def set_cart_profile_from_position(self, movement_profile: str, pulsation: float = 1, amplitude: float = 1):
+    def set_cart_profile_from_position(self, movement_profile: str, pulsation: float = 1, amplitude: float = 1) -> None:
         """
         Set the cart's position profile based on the specified movement type.
 
@@ -294,7 +284,7 @@ class SimulatedPendulum(Pendulum):
 
         self.derive_cart_state_from_position()
 
-    def set_cart_profile_from_acceleration(self, movement_profile: str, pulsation: float = 1, amplitude: float = 1):
+    def set_cart_profile_from_acceleration(self, movement_profile: str, pulsation: float = 1, amplitude: float = 1) -> None:
         """
         Set the cart's acceleration profile based on the specified movement type.
 

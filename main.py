@@ -149,28 +149,72 @@ def phase_graph(pendulums: list[Pendulum]):
 
 
 if __name__ == '__main__':
-    data_time, data_theta = load_data("data4.txt")
-    data = Pendulum("data", data_time)
-    data.theta = data_theta
-    data.derive_angular_state()
+    # loads the data from a file
+    data_time, data_theta = load_data("data/data4.txt")
+    # creates a pendulum with corresponding data
+    mass = 0.01
+    length = 0.2555
+    data = Pendulum("data", mass, length, data_time, data_theta)
+    # sets a time shift for graphing
     data.time_shift = -0.04
 
-    sim = SimulatedPendulum("simulation", data.theta[0], 0, 0.00015)
+    # Create a simulated pendulum
+    sim = SimulatedPendulum("simulation", 0.01, 0.2555, data_theta[0], 0, 0.00015)
     sim.simulate()
 
-    move_sim = SimulatedPendulum("move sim", np.pi/6, 0, 0.00015)
+    # Create a simulated pendulum with sinusoidal position profile
+    move_sim = SimulatedPendulum("move sim", 0.01, 0.2555, np.pi/6, 0, 0.00015)
     move_sim.set_cart_profile_from_position("sinus", 1, 0.33)
     move_sim.simulate()
 
-    #overall_graph([data, sim])
+
+
+    # shows graphs
+    overall_graph([data, sim])
     theta_graph([data, sim])
-    #energy_graph([data])
-    #energy_graph([sim])
-    #theta_graph([move_sim])
-    #energy_graph([move_sim])
-    #phase_graph([sim])
+    energy_graph([data])
+    energy_graph([sim])
+    theta_graph([move_sim])
+    energy_graph([move_sim])
+    phase_graph([sim])
 
 
 
+    ####################
+    # NORMALIZED TESTS #
+    ####################
 
+    friction = 0.000075
+
+    d_time, d_theta = load_data("data/60.txt")
+    TN_60_d = Pendulum("TN_60_d", 0.01, 0.248, d_time, d_theta)
+    TN_60_s = SimulatedPendulum("TN_60_s", 0.01, 0.248, d_theta[0], 0, friction, 38)
+
+    d_time, d_theta = load_data("data/10.txt")
+    TN_10_d = Pendulum("TN_10_d", 0.01, 0.255, d_time, d_theta)
+    TN_10_s = SimulatedPendulum("TN_10_s", 0.01, 0.255, d_theta[0], 0, friction, 27)
+
+    d_time, d_theta = load_data("data/leger.txt")
+    TN_leger_d = Pendulum("TN_leger_d", 0.03, 0.315, d_time, d_theta)
+    TN_leger_s = SimulatedPendulum("TN_leger_s", 0.03, 0.315, d_theta[0], 0, 0.00023, 40)
+
+    d_time, d_theta = load_data("data/lourd.txt")
+    TN_lourd_d = Pendulum("TN_lourd_d", 0.045, 0.33, d_time, d_theta)
+    TN_lourd_s = SimulatedPendulum("TN_lourd_s", 0.045, 0.33, 0.35, 0, 0.00032, 40)
+
+    d_time, d_theta = load_data("data/petit.txt")
+    TN_petit_d = Pendulum("TN_petit_d", 0.01, 0.15, d_time, d_theta)
+    TN_petit_d.time_shift = 0.05
+    TN_petit_s = SimulatedPendulum("TN_petit_s", 0.01, 0.15, d_theta[0], 0, friction*0.5, 45)
+
+    d_time, d_theta = load_data("data/long.txt")
+    TN_long_d = Pendulum("TN_long_d", 0.01, 0.26, d_time, d_theta)
+    TN_long_s = SimulatedPendulum("TN_long_s", 0.01, 0.26, d_theta[0], 0, friction)
+
+    theta_graph([TN_60_s, TN_60_d])
+    theta_graph([TN_10_s, TN_10_d])
+    theta_graph([TN_leger_s, TN_leger_d])
+    theta_graph([TN_lourd_s, TN_lourd_d])
+    theta_graph([TN_petit_s, TN_petit_d])
+    theta_graph([TN_long_s, TN_long_d])
 

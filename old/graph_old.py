@@ -115,7 +115,7 @@ if __name__ == '__main__':
     
     simulation_old.simulate("const", 0.8587, 1.2375)
     #simulation_old.simulate("const", 0.85, 1.3)
-    data_time, data_theta = load_tracker_data_old.load_data("data4.txt")
+    data_time, data_theta = load_tracker_data_old.load_data("../data/data4.txt")
     # Interpolate experimental data to simulation time points
     interp_data_func = interp1d(data_time, data_theta, kind='linear', fill_value="extrapolate")
 

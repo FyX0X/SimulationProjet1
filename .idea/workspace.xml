@@ -4,19 +4,24 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="12571baf-3a2e-4b56-b256-f72b736a469b" name="Changes" comment="Added better calibration x y axis automatic&#10;but friction function still manual">
-      <change afterPath="$PROJECT_DIR$/compare.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data_move.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/graph_cart_move_old.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/load_tracker_data_old.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/simulation_old.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/SimulationProjet1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SimulationProjet1.iml" afterDir="false" />
+    <list default="true" id="12571baf-3a2e-4b56-b256-f72b736a469b" name="Changes" comment="added new file with better structure for simulation and comparison">
+      <change afterPath="$PROJECT_DIR$/data/10.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/60.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/leger.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/long.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/lourd.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/petit.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data4.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data4.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/graph.py" beforeDir="false" afterPath="$PROJECT_DIR$/graph_old.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/load_tracker_data.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/compare.py" beforeDir="false" afterPath="$PROJECT_DIR$/old/compare.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data4.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/data4.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data_move.txt" beforeDir="false" afterPath="$PROJECT_DIR$/data/data_move.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graph_cart_move_old.py" beforeDir="false" afterPath="$PROJECT_DIR$/old/graph_cart_move_old.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/graph_old.py" beforeDir="false" afterPath="$PROJECT_DIR$/old/graph_old.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/load_tracker_data_old.py" beforeDir="false" afterPath="$PROJECT_DIR$/old/load_tracker_data_old.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/simulation.py" beforeDir="false" afterPath="$PROJECT_DIR$/simulation.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/simulation_old.py" beforeDir="false" afterPath="$PROJECT_DIR$/old/simulation_old.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_interpolation.py" beforeDir="false" afterPath="$PROJECT_DIR$/old/test_interpolation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,26 +61,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Python.compare.executor": "Run",
-    "Python.graph.executor": "Run",
-    "Python.graph_cart_move.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.simulation.executor": "Run",
-    "Python.test.executor": "Run",
-    "Python.test_interpolation.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/marti/code/PyCharm/SimulationProjet1",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Python.compare.executor&quot;: &quot;Run&quot;,
+    &quot;Python.graph.executor&quot;: &quot;Run&quot;,
+    &quot;Python.graph_cart_move.executor&quot;: &quot;Run&quot;,
+    &quot;Python.graph_old.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.simulation.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_interpolation.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/marti/code/PyCharm/SimulationProjet1/data&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyIntegratedToolsModulesConfigurable&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\marti\code\PyCharm\SimulationProjet1\data" />
       <recent name="C:\Users\marti\code\PyCharm\SimulationProjet1" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\marti\code\PyCharm\SimulationProjet1\data" />
+      <recent name="C:\Users\marti\code\PyCharm\SimulationProjet1\old" />
     </key>
   </component>
   <component name="RunManager" selected="Python.main">
@@ -92,7 +103,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/compare.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\marti\code\PyCharm\SimulationProjet1\old\compare.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -114,7 +125,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\marti\code\PyCharm\SimulationProjet1\graph_cart_move_old.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\marti\code\PyCharm\SimulationProjet1\old\graph_cart_move_old.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -136,7 +147,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\marti\code\PyCharm\SimulationProjet1\graph_old.py" />
+      <option name="SCRIPT_NAME" value="C:\Users\marti\code\PyCharm\SimulationProjet1\old\graph_old.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -192,9 +203,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.main" />
+        <item itemvalue="Python.graph_old" />
         <item itemvalue="Python.simulation" />
         <item itemvalue="Python.graph_cart_move_old" />
-        <item itemvalue="Python.graph_old" />
         <item itemvalue="Python.compare" />
       </list>
     </recent_temporary>
@@ -223,7 +234,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732124177566</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="added new file with better structure for simulation and comparison">
+      <option name="closed" value="true" />
+      <created>1732682051197</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1732682051197</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -240,6 +259,7 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Added better calibration x y axis automatic&#10;but friction function still manual" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added better calibration x y axis automatic&#10;but friction function still manual" />
+    <MESSAGE value="added new file with better structure for simulation and comparison" />
+    <option name="LAST_COMMIT_MESSAGE" value="added new file with better structure for simulation and comparison" />
   </component>
 </project>

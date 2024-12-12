@@ -73,7 +73,7 @@ def calc_cart_acc(x_cart, time_cart):
 
 if __name__ == '__main__':
 
-    data_time, data_theta, data_x_cart = load_tracker_data_old.load_data_with_cart_movement("data_move.txt")
+    data_time, data_theta, data_x_cart = load_tracker_data_old.load_data_with_cart_movement("../data/data_move.txt")
     interp_data_x_pos_func = interp1d(data_time, data_x_cart, kind='linear', fill_value="extrapolate")
     interp_data_x = interp_data_x_pos_func(simulation_old.t)
     # Parameters for the Savitzky-Golay filter
