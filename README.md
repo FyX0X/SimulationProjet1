@@ -53,7 +53,7 @@ The project includes tools to:
 2. **Simulation**  
    The pendulum dynamics are modeled using **Euler integration**:  
    
-   ![THETA](docs/theta2_formula.jpg) 
+   ![THETA](docs/theta_formula.jpg)
 3. 
    where:  
    - \( g \) — gravitational acceleration  
