@@ -48,12 +48,12 @@ The project includes tools to:
    Tracker outputs `.txt` files with `(time, x, y)` positions of the pendulum.  
    From this, the angular position `θ` is computed:  
 
-   ![THETA](docs/theta_formula.svg)
+   ![THETA](docs/theta_formula.jpg)
 
 2. **Simulation**  
    The pendulum dynamics are modeled using **Euler integration**:  
    
-   ![THETA](docs/theta_2dot_formula.svg)
+   ![THETA](docs/theta2_formula.jpg)
 3. 
    where:  
    - \( g \) — gravitational acceleration  
