@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="12571baf-3a2e-4b56-b256-f72b736a469b" name="Changes" comment="update readme">
+    <list default="true" id="12571baf-3a2e-4b56-b256-f72b736a469b" name="Changes" comment="add formula in docs">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theta_2dot_formula.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/theta_formula.svg" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,24 +46,24 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "Python.compare.executor": "Run",
-    "Python.graph.executor": "Run",
-    "Python.graph_cart_move.executor": "Run",
-    "Python.graph_old.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.simulation.executor": "Run",
-    "Python.test.executor": "Run",
-    "Python.test_interpolation.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "ignore.virus.scanning.warn.message": "true",
-    "last_opened_file_path": "C:/Users/marti/code/PyCharm/SimulationProjet1",
-    "settings.editor.selected.configurable": "promo.ai.assistant"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;Python.compare.executor&quot;: &quot;Run&quot;,
+    &quot;Python.graph.executor&quot;: &quot;Run&quot;,
+    &quot;Python.graph_cart_move.executor&quot;: &quot;Run&quot;,
+    &quot;Python.graph_old.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.simulation.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test.executor&quot;: &quot;Run&quot;,
+    &quot;Python.test_interpolation.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/marti/code/PyCharm/SimulationProjet1&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;promo.ai.assistant&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\marti\code\PyCharm\SimulationProjet1" />
@@ -260,7 +259,31 @@
       <option name="project" value="LOCAL" />
       <updated>1755991435749</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="update readme">
+      <option name="closed" value="true" />
+      <created>1755992042828</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1755992042828</updated>
+    </task>
+    <task id="LOCAL-00008" summary="add formula in docs">
+      <option name="closed" value="true" />
+      <created>1755992081175</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1755992081175</updated>
+    </task>
+    <task id="LOCAL-00009" summary="add formula in docs">
+      <option name="closed" value="true" />
+      <created>1755992145388</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1755992145388</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -281,6 +304,7 @@
     <MESSAGE value="New file structure" />
     <MESSAGE value="update to readme and docs" />
     <MESSAGE value="update readme" />
-    <option name="LAST_COMMIT_MESSAGE" value="update readme" />
+    <MESSAGE value="add formula in docs" />
+    <option name="LAST_COMMIT_MESSAGE" value="add formula in docs" />
   </component>
 </project>
