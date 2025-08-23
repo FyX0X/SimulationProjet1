@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="12571baf-3a2e-4b56-b256-f72b736a469b" name="Changes" comment="New file structure">
-      <change afterPath="$PROJECT_DIR$/docs/angular_position.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/cart_image.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/energy_data.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/energy_sim.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/exp_setup.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docs/move_sim.png" afterDir="false" />
+    <list default="true" id="12571baf-3a2e-4b56-b256-f72b736a469b" name="Changes" comment="update to readme and docs">
+      <change afterPath="$PROJECT_DIR$/docs/theta_2dot_formula.svg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/docs/theta_formula.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
@@ -249,7 +245,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733973292144</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="update to readme and docs">
+      <option name="closed" value="true" />
+      <created>1755990872602</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1755990872602</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -268,6 +272,7 @@
     <MESSAGE value="Added better calibration x y axis automatic&#10;but friction function still manual" />
     <MESSAGE value="added new file with better structure for simulation and comparison" />
     <MESSAGE value="New file structure" />
-    <option name="LAST_COMMIT_MESSAGE" value="New file structure" />
+    <MESSAGE value="update to readme and docs" />
+    <option name="LAST_COMMIT_MESSAGE" value="update to readme and docs" />
   </component>
 </project>
