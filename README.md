@@ -9,7 +9,7 @@
 
 This project simulates and analyzes the motion of a pendulum mounted on a moving cart.  
 It combines **experimental data** (extracted from video recordings with [Tracker](https://physlets.org/tracker/)) and a **numerical simulation** to study the pendulum’s dynamics under various conditions.
-
+This program was made for the course Project 1 ([Projet 1](https://uclouvain.be/cours-2024-LEPL1501)) in the Engineer Bachelor at UCLouvain.
 The project includes tools to:
 - Load and process real-world experimental data (Tracker output).
 - Run simulations of a pendulum on a cart with configurable mass, length, and friction.
